@@ -1,62 +1,71 @@
 <!DOCTYPE html>
-<html lang="pt_BR">
+<html class="no-js" lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+
+    <title>Oh My Timer</title>
+    <meta name="description" content="Temporizador e Cronômetro Web." />
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Temporizador e Cronômetro web." />
-    <title>Oh My Timer</title>
+
+    <meta property="og:title" content="Oh My Timer" />
+    <meta property="og:description" content="Temporizador e Cronômetro web." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+
     <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
-    <script src="https://kit.fontawesome.com/44b69f8ed9.js" crossorigin="anonymous" defer></script>
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
   </head>
   <body>
-    <div class="container">
-      <main class="panel">
-        <nav class="page-nav">
-          <button data-timer class="active">Temporizador</button>
-          <button data-stopwatch>Cronômetro</button>
-        </nav>
-        <section class="timer-panel active">
-          <div class="clock-panel">
-            <h1 data-display>
-              <span>0</span>
-              <span>0</span>
-              <p>:</p>
-              <span>0</span>
-              <span>0</span>
-              <p>:</p>
-              <span>0</span>
-              <span>0</span>
-              <p>:</p>
-              <input type="text" data-input />
-            </h1>
-          </div>
-          <div class="edit-panel hidden">
-            <i tabindex="0" data-close class="fas fa-times hidden"></i>
-            <i tabindex="0" data-save class="fas fa-save hidden"></i>
-          </div>
-          <div class="edit-control">
-            <i tabindex="0" data-edit class="fas fa-stopwatch"></i>
-            <i tabindex="0" data-play class="fas fa-play"></i>
-            <i tabindex="0" data-pause class="fas fa-pause hidden"></i>
-            <i tabindex="0" data-reset class="fas fa-redo-alt"></i>
-            <i tabindex="0" data-bell-on class="fas fa-bell hidden"></i>
-            <i tabindex="0" data-bell-off class="fas fa-bell-slash"></i>
-          </div>
-        </section>
-        <section class="stopwatch-panel">
-          <div class="clock-panel">
-            <h1>00</h1>
-            <span>. 00</span>
-          </div>
-          <div class="edit-control">
-            <i tabindex="0" data-play class="fas fa-play"></i>
-            <i tabindex="0" data-pause class="fas fa-pause hidden"></i>
-            <i tabindex="0" data-reset class="fas fa-redo-alt"></i>
-          </div>
-        </section>
-      </main>
-    </div>
+    <main class="container">
+      <!-- Navigation -->
+      <nav>
+        <button data-role="timer" class="active">Temporizador</button>
+        <button data-role="stopwatch">Cronômetro</button>
+      </nav>
+      <!-- Timer -->
+      <section class="timer active">
+        <h1 class="display" data-display>
+          <span data-pos="hour">00</span>
+          <p>:</p>
+          <span data-pos="minute">05</span>
+          <p>:</p>
+          <span data-pos="second">00</span>
+          <p>:</p>
+        </h1>
+        <div class="control">
+          <i tabindex="0" data-role="check" class="fas fa-check finish"></i>
+          <i tabindex="0" data-role="replay" class="fas fa-redo finish"></i>
+          <i tabindex="0" data-role="edit" class="fas fa-clock"></i>
+          <i tabindex="0" data-role="play" class="fas fa-play"></i>
+          <i tabindex="0" data-role="pause" class="fas fa-pause hidden"></i>
+          <i tabindex="0" data-role="redo" class="fas fa-redo-alt"></i>
+          <i tabindex="0" data-role="bellOn" class="fas fa-bell hidden"></i>
+          <i tabindex="0" data-role="bellOff" class="fas fa-bell-slash"></i>
+          <i tabindex="0" data-role="volumeOn" class="fas fa-volume-up"></i>
+          <i tabindex="0" data-role="volumeOff" class="fas fa-volume-off hidden"></i>
+        </div>
+      </section>
+      <!-- Stopwatch -->
+      <section class="stopwatch">
+        <h1 class="display" data-display>
+          <span data-pos="hour"></span>
+          <p>:</p>
+          <span data-pos="minute"></span>
+          <p>:</p>
+          <span data-pos="second">00</span>
+          <p>.</p>
+          <span data-pos="millisecond">00</span>
+        </h1>
+        <div class="control">
+          <i tabindex="0" data-role="play" class="fas fa-play"></i>
+          <i tabindex="0" data-role="pause" class="fas fa-pause hidden"></i>
+          <i tabindex="0" data-role="redo" class="fas fa-redo-alt"></i>
+        </div>
+      </section>
+    </main>
+    <script src="script.js" async defer></script>
   </body>
 </html>

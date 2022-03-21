@@ -1,257 +1,313 @@
-// todo page
-const pageTimerButton = document.querySelector(".page-nav [data-timer]");
-const pageStopwatchButton = document.querySelector(".page-nav [data-stopwatch]");
-const pageTimerPanel = document.querySelector(".timer-panel");
-const pageStopwatchPanel = document.querySelector(".stopwatch-panel");
+// Stopwatch
 
-pageTimerButton.addEventListener("click", () => {
-  pageTimerButton.classList.toggle("active", true);
-  pageStopwatchButton.classList.toggle("active", false);
-  pageTimerPanel.classList.toggle("active", true);
-  pageStopwatchPanel.classList.toggle("active", false);
+const stopwatchPanel = document.querySelector(".container .stopwatch");
+
+const stopwatchElements = {
+  display: stopwatchPanel.querySelectorAll(".display span"),
+  playButton: stopwatchPanel.querySelector(".control .fa-play"),
+  pauseButton: stopwatchPanel.querySelector(".control .fa-pause"),
+};
+
+var stopwatchStamp, stopwatchFreezeTime, runStopwatchClock;
+
+const stopwatchRoles = {
+  play() {
+    toggleStopwatchState("play");
+    stopwatchStamp = !stopwatchStamp ? Date.now() : stopwatchStamp + Date.now() - stopwatchFreezeTime;
+    runStopwatchClock = setInterval(runStopwatchInterval, 75);
+  },
+  pause() {
+    toggleStopwatchState("pause");
+    stopwatchFreezeTime = Date.now();
+    clearInterval(runStopwatchClock);
+  },
+  redo() {
+    if (typeof runStopwatchClock !== "undefined") {
+      clearInterval(runStopwatchClock);
+
+      stopwatchStamp = stopwatchFreezeTime = runStopwatchClock = undefined;
+
+      stopwatchElements.display[0].textContent = stopwatchElements.display[1].textContent = "";
+      stopwatchElements.display[2].textContent = stopwatchElements.display[3].textContent = "00";
+
+      toggleStopwatchState("pause");
+    }
+  },
+};
+
+stopwatchPanel.addEventListener("click", (event) => {
+  let role = event.target.dataset.role;
+
+  if (!role || typeof role !== "string") return;
+
+  event.target.blur();
+
+  if (stopwatchRoles[role]) stopwatchRoles[role]();
 });
-pageStopwatchButton.addEventListener("click", () => {
-  pageTimerButton.classList.toggle("active", false);
-  pageStopwatchButton.classList.toggle("active", true);
-  pageTimerPanel.classList.toggle("active", false);
-  pageStopwatchPanel.classList.toggle("active", true);
-});
 
-// todo stopwatch
-const stopwatchPlayButton = document.querySelector(".stopwatch-panel [data-play]");
-const stopwatchPauseButton = document.querySelector(".stopwatch-panel [data-pause]");
-const stopwatchResetButton = document.querySelector(".stopwatch-panel [data-reset]");
-
-const stopwatchDisplay = document.querySelector(".stopwatch-panel .clock-panel");
-
-var stopwatchStamp;
-var [stopwatchHour, stopwatchMinute, stopwatchSecond, stopwatchMillisecond] = [0, 0, 0, 0];
-
-stopwatchPlayButton.addEventListener("click", () => {
-  if (!stopwatchStamp) stopwatchStamp = Date.now();
-  stopwatchTimer = setInterval(runStopwatchTimer, 65);
-  stopwatchButtonToggle();
-});
-
-function stopwatchButtonToggle() {
-  stopwatchPlayButton.classList.toggle("hidden");
-  stopwatchPauseButton.classList.toggle("hidden");
+function toggleStopwatchState(state) {
+  stopwatchElements.playButton.classList.toggle("hidden", state === "play");
+  stopwatchElements.pauseButton.classList.toggle("hidden", state === "pause");
 }
 
-function runStopwatchTimer() {
-  let clock = convertMillisecondToStringArray(Date.now() - stopwatchStamp);
+function runStopwatchInterval() {
+  let time = parseStopwatchStampToArray(Date.now() - stopwatchStamp);
+  let display = stopwatchElements.display;
 
-  stopwatchDisplay.children[0].textContent =
-    (clock["hr"] !== "00" ? `${clock["hr"]} : ` : "") +
-    (clock["min"] !== "00" ? `${clock["min"]} : ` : "") +
-    `${clock["sec"]} `;
-  stopwatchDisplay.children[1].textContent = `. ${clock["ms"]}`;
+  if (time[3] !== "00") display[3].textContent = time[3];
+  if (time[2] !== "00" && time[2] !== display[2]) display[2].textContent = time[2];
+  if (time[1] !== "00" && time[1] !== display[1]) display[1].textContent = time[1];
+  if (time[0] !== "00" && time[0] !== display[0]) display[0].textContent = time[0];
 }
 
-function convertMillisecondToStringArray(millisecond) {
-  let ms = Math.abs(parseInt(millisecond % 100, 10))
+function parseStopwatchStampToArray(millisecond) {
+  let ms = Math.abs(parseInt(millisecond % 1000))
     .toString()
-    .padStart(2, "0");
+    .padStart(3, "0")
+    .slice(0, -1);
   let sec = Math.abs(parseInt(millisecond / 1000) % 60)
     .toString()
     .padStart(2, "0");
   let min = Math.abs(parseInt(millisecond / 60000) % 60)
     .toString()
     .padStart(2, "0");
-  let hour = Math.abs(parseInt(millisecond / 3600000) % 60)
+  let hr = Math.abs(parseInt(millisecond / 3600000) % 60)
     .toString()
     .padStart(2, "0");
 
-  return {
-    hr: hour,
-    min: min,
-    sec: sec,
-    ms: ms,
-  };
+  return [hr, min, sec, ms];
 }
 
-stopwatchPauseButton.addEventListener("click", () => {
-  clearInterval(stopwatchTimer);
-  stopwatchButtonToggle();
-});
+// Timer
 
-stopwatchResetButton.addEventListener("click", () => {
-  if (typeof stopwatchTimer !== "undefined") {
-    clearInterval(stopwatchTimer);
-    stopwatchTimer = undefined;
-    stopwatchStamp = null;
-    stopwatchPlayButton.classList.remove("hidden");
-    stopwatchPauseButton.classList.add("hidden");
-    stopwatchDisplay.children[0].textContent = `00 `;
-    stopwatchDisplay.children[1].textContent = `. 00`;
-  }
-});
+const timerPanel = document.querySelector(".container .timer");
 
-// todo timer
-const timerEditButton = document.querySelector(".timer-panel [data-edit]");
-const timerPlayButton = document.querySelector(".timer-panel [data-play]");
-const timerPauseButton = document.querySelector(".timer-panel [data-pause]");
-const timerResetButton = document.querySelector(".timer-panel [data-reset]");
-const timerBellButtonOn = document.querySelector(".timer-panel [data-bell-on]");
-const timerBellButtonOff = document.querySelector(".timer-panel [data-bell-off]");
+// var timerStamp = 2000, //timer -> 2s
+  var timerStamp = 300000, //timer -> 5m
+  runTimer,
+  freezeTimer,
+  runTimerClock,
+  timerNotification = JSON.parse(localStorage.getItem("timerNotification")) ?? false,
+  playAudio = JSON.parse(localStorage.getItem("playAudio")) ?? true,
+  audio = new Audio("storage/sounds/Alarm Clock Beep.mp3");
 
-const timerClockDisplay = document.querySelector(".timer-panel [data-display]");
-const timerClockInput = document.querySelector(".timer-panel [data-input]");
+const timerElements = {
+  play: timerPanel.querySelector(".control .fa-play"),
+  pause: timerPanel.querySelector(".control .fa-pause"),
+  timer: timerPanel.querySelectorAll(".display span"),
+  display: timerPanel.querySelector(".display"),
+  control: timerPanel.querySelector(".control"),
+  volumeOn: timerPanel.querySelector(".control .fa-volume-up"),
+  volumeOff: timerPanel.querySelector(".control .fa-volume-off"),
+  bellOn: timerPanel.querySelector(".control .fa-bell"),
+  bellOff: timerPanel.querySelector(".control .fa-bell-slash"),
+};
 
-const timerEditPanelSaveButton = document.querySelector(".timer-panel .edit-panel [data-save]");
-const timerEditPanelCloseButton = document.querySelector(".timer-panel .edit-panel [data-close]");
+const timerRoles = {
+  play() {
+    if (typeof runTimer !== "undefined" && runTimer <= 1000) return;
 
-var timerStamp;
-var timerNotificationStatus;
-var audio = new Audio("storage/sounds/ES_Alarm Clock Beep - SFX Producer.mp3");
+    toggleTimerState("play");
 
-timerNotificationStatus = localStorage.getItem("timerNotificationStatus") ?? Notification.permission;
-timerNotificationStatus = timerNotificationStatus === "true" || timerNotificationStatus === "granted" ? true : false;
+    if (!runTimer) {
+      // user's timer + now() + 1s delay
+      runTimer = timerStamp + Date.now() + 1000;
+    } else {
+      runTimer -= freezeTimer - Date.now();
+    }
 
-if (timerNotificationStatus) timerNotificationToggle();
+    runTimerClock = setInterval(runTimerInterval, 250);
+  },
+  pause() {
+    toggleTimerState("pause");
 
-timerEditButton.addEventListener("click", () => {
-  resetTimerClock();
-  timerEditPanelCloseButton.parentElement.classList.toggle("hidden");
-  setTimeout(() => {
-    timerEditButton.parentElement.classList.toggle("edit");
-  }, 50);
-  setTimeout(() => {
-    timerClockInput.classList.toggle("edit");
-  }, 75);
-});
+    freezeTimer = Date.now();
 
-timerEditPanelCloseButton.addEventListener("click", () => {
-  parseStringToTimerDisplay(convertTimerStampToString(timerStamp ?? 0));
+    clearInterval(runTimerClock);
+  },
+  redo() {
+    toggleTimerState("pause");
 
-  timerEditPanelCloseButton.parentElement.classList.toggle("hidden");
-  timerEditButton.parentElement.classList.toggle("edit");
-  timerClockInput.classList.toggle("edit");
-});
+    if (typeof runTimerClock !== "undefined") {
+      clearInterval(runTimerClock);
 
-timerEditPanelSaveButton.addEventListener("click", () => {
-  let timerClockStamp = parseTimerDisplayToString().match(/.{1,2}/g);
+      runTimer = freezeTimer = runTimerClock = undefined;
 
-  timerStamp = timerClockStamp[0] * 3600000 + timerClockStamp[1] * 60000 + timerClockStamp[2] * 1000;
-
-  timerEditPanelSaveButton.parentElement.classList.toggle("hidden");
-  timerEditButton.parentElement.classList.toggle("edit");
-  timerClockInput.classList.toggle("edit");
-});
-
-timerClockInput.addEventListener("focusin", () => {
-  parseStringToTimerDisplay("000000");
-});
-
-timerClockInput.addEventListener("keypress", (event) => {
-  event.preventDefault();
-  if (isNaN(event.key)) return;
-  let input = parseTimerDisplayToString();
-  parseStringToTimerDisplay(input.substring(1) + event.key);
-});
-
-function parseTimerDisplayToString() {
-  return timerClockDisplay.textContent
-    .replace(/\r?\n|\r/g, "")
-    .replace(/:/g, "")
-    .replaceAll(" ", "");
-}
-
-function parseStringToTimerDisplay(string) {
-  let input = string.match(/.{1,1}/g);
-  let loop = 0;
-  timerClockDisplay.childNodes.forEach((e) => {
-    if (e.tagName != "SPAN") return;
-    e.textContent = input[loop++];
-  });
-}
-
-function convertTimerStampToString(millisecond) {
-  let sec = Math.abs(parseInt(millisecond / 1000) % 60)
-    .toString()
-    .padStart(2, "0");
-  let min = Math.abs(parseInt(millisecond / 60000) % 60)
-    .toString()
-    .padStart(2, "0");
-  let hour = Math.abs(parseInt(millisecond / 3600000) % 60)
-    .toString()
-    .padStart(2, "0");
-  return `${hour}${min}${sec}`;
-}
-
-timerPlayButton.addEventListener("click", () => {
-  if (!timerStamp) return;
-
-  timerClockDisplayInterval = setInterval(runTimerClock, 1000);
-
-  timerPlayButton.classList.toggle("hidden");
-  timerPauseButton.classList.toggle("hidden");
-});
-
-timerPauseButton.addEventListener("click", () => {
-  audio.pause();
-  clearInterval(timerClockDisplayInterval);
-
-  timerPlayButton.classList.toggle("hidden");
-  timerPauseButton.classList.toggle("hidden");
-});
-
-function runTimerClock() {
-  if ((timerStamp -= 1000) <= 0) {
-    pushTimerNotificationToUser();
-    clearInterval(timerClockDisplayInterval);
-    audio.play();
-  }
-
-  parseStringToTimerDisplay(convertTimerStampToString(timerStamp));
-}
-
-timerResetButton.addEventListener("click", resetTimerClock);
-
-function resetTimerClock() {
-  if (typeof timerClockDisplayInterval !== "undefined") {
+      parseTimerStringToDisplay(parseTimerStampToString(timerStamp ?? 0), true);
+    }
+  },
+  check() {
     audio.pause();
-    clearInterval(timerClockDisplayInterval);
-    timerClockDisplayInterval = undefined;
-    timerStamp = 0;
+    toggleTimerState("pause");
 
-    parseStringToTimerDisplay("000000");
+    if (typeof notifyTimer !== "undefined") notifyTimer.close();
 
-    timerPlayButton.classList.toggle("hidden", false);
-    timerPauseButton.classList.toggle("hidden", true);
-  }
-}
-
-[timerBellButtonOff, timerBellButtonOn].forEach((element) => {
-  element.addEventListener("click", async () => {
+    timerElements.control.classList.toggle("finished");
+  },
+  replay() {
+    audio.pause();
+    this.redo();
+    this.play();
+    timerElements.control.classList.toggle("finished");
+  },
+  volumeOn() {
+    localStorage.setItem("playAudio", false);
+    playAudio = false;
+    toggleAudioState("on");
+  },
+  volumeOff() {
+    localStorage.setItem("playAudio", true);
+    playAudio = true;
+    toggleAudioState("off");
+  },
+  bellOff() {
     if (Notification.permission === "default") {
-      await Notification.requestPermission();
+      Notification.requestPermission();
     }
 
     if (Notification.permission === "granted") {
-      timerNotificationStatus = timerNotificationStatus ? false : true;
-      localStorage.setItem("timerNotificationStatus", timerNotificationStatus);
-      timerNotificationToggle();
+      toggleNotificationSate("off");
+      localStorage.setItem("timerNotification", true);
+      timerNotification = true;
     }
 
     if (Notification.permission === "denied") {
-      timerBellButtonOff.classList.add("shake");
+      // shake the icon
     }
-  });
+  },
+  bellOn() {
+    toggleNotificationSate("on");
+    localStorage.setItem("timerNotification", false);
+    timerNotification = false;
+  },
+};
+
+timerPanel.addEventListener("click", (event) => {
+  let role = event.target.dataset.role;
+
+  if (!role && typeof role !== "string") return;
+
+  event.target.blur();
+
+  if (timerRoles[role]) timerRoles[role]();
 });
 
-timerBellButtonOff.addEventListener("animationend", () => {
-  timerBellButtonOff.classList.remove("shake");
+function toggleTimerState(state) {
+  timerElements.play.classList.toggle("hidden", state === "play");
+  timerElements.pause.classList.toggle("hidden", state === "pause");
+}
+
+function runTimerInterval() {
+  let time = runTimer - Date.now();
+
+  if (time < 1000) {
+    clearInterval(runTimerClock);
+
+    if (playAudio) audio.play();
+    if (timerNotification) pushTimerNotification();
+
+    timerElements.control.classList.toggle("finished");
+
+    runTimer = 0;
+  }
+
+  parseTimerStringToDisplay(parseTimerStampToString(time));
+}
+
+function parseTimerStringToDisplay(string, push = false) {
+  let array = string.match(/.{1,2}/g);
+  let timer = timerElements.timer;
+
+  if (array[0] !== timer[0] || push) timer[0].textContent = array[0];
+  if (array[1] !== timer[1] || push) timer[1].textContent = array[1];
+  if (array[2] !== timer[2] || push) timer[2].textContent = array[2];
+}
+
+function parseTimerStampToString(millisecond) {
+  let sec = Math.floor(parseInt(millisecond / 1000) % 60)
+    .toString()
+    .padStart(2, "0");
+  let min = Math.floor(parseInt(millisecond / 60000) % 60)
+    .toString()
+    .padStart(2, "0");
+  let hour = Math.floor(parseInt(millisecond / 3600000))
+    .toString()
+    .padStart(2, "0");
+
+  return `${hour}${min}${sec}`;
+}
+
+function toggleAudioState(state) {
+  timerElements.volumeOn.classList.toggle("hidden", state === "on");
+  timerElements.volumeOff.classList.toggle("hidden", state === "off");
+}
+
+function toggleNotificationSate(state) {
+  timerElements.bellOn.classList.toggle("hidden", state === "on");
+  timerElements.bellOff.classList.toggle("hidden", state === "off");
+}
+
+function pushTimerNotification() {
+  if (!timerNotification) return;
+  let title = "Oh My Timer";
+  let body = "Timer Finalizado!";
+  let icon = "./favicon.png";
+  notifyTimer = new Notification(title, { body, icon });
+}
+
+// Navigation
+
+const navigationPanel = document.querySelector(".container nav");
+
+const navigationElements = {
+  timerButton: navigationPanel.querySelector("[data-role='timer']"),
+  stopwatchButton: navigationPanel.querySelector("[data-role='stopwatch']"),
+};
+
+navigationPanel.addEventListener("click", (event) => {
+  let toggle = event.target.dataset.role;
+
+  if (!toggle || typeof toggle !== "string") return;
+
+  event.target.blur();
+
+  let button = navigationPanel.querySelector(`[data-role='${toggle}']`);
+  let width = window.innerWidth;
+
+  if (width >= 1200) {
+    if (button.classList.contains(".active")) return;
+
+    togglePanel(toggle);
+    return;
+  }
+
+  togglePanel(toggle == "timer" ? "stopwatch" : "timer");
 });
 
-function timerNotificationToggle() {
-  timerBellButtonOff.classList.toggle("hidden");
-  timerBellButtonOn.classList.toggle("hidden");
+function togglePanel(panel) {
+  navigationElements.timerButton.classList.toggle("active", panel === "timer");
+  navigationElements.stopwatchButton.classList.toggle("active", panel === "stopwatch");
+
+  timerPanel.classList.toggle("active", panel === "timer");
+  stopwatchPanel.classList.toggle("active", panel === "stopwatch");
 }
 
-function pushTimerNotificationToUser() {
-  if (!timerNotificationStatus) return;
-  var title = "Oh My Timer";
-  var body = "Timer Finalizado!";
-  new Notification(title, { body });
+// Caso website seja acessado em algum dispositivo móvel
+// o script abaixo altera o tipo do input para int.
+let browserAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+if (
+  /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
+    browserAgent
+  ) ||
+  /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+    browserAgent.substr(0, 4)
+  )
+) {
+  // fix timerElements["input"].type = "number";
 }
+
+// Document Ready
+
+if (playAudio === false) timerRoles.volumeOn(); // toggle state to off
+if (timerNotification === true) timerRoles.bellOff(); // toggle state to on

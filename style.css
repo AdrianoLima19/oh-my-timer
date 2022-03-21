@@ -1,8 +1,21 @@
+@font-face {
+  font-family: "clockicons";
+  src: url("./webfonts/clockicons/84cb021d5f9af287ffff84b61beef6dc.eot");
+  src: url("./webfonts/clockicons/84cb021d5f9af287ffff84b61beef6dc.eot?#iefix") format("embedded-opentype"),
+    url("./webfonts/clockicons/84cb021d5f9af287ffff84b61beef6dc.woff2") format("woff2"),
+    url("./webfonts/clockicons/84cb021d5f9af287ffff84b61beef6dc.woff") format("woff"),
+    url("./webfonts/clockicons/84cb021d5f9af287ffff84b61beef6dc.ttf") format("truetype"),
+    url("./webfonts/clockicons/") format("svg");
+}
+
 :root {
   --gray: #71717a;
   --white: #cfcfcd;
   --primary: #a5b4fc;
   --background: #121214;
+
+  --container-y: 5vh;
+  --container-x: 8vw;
 }
 
 *,
@@ -16,260 +29,189 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Layout */
 
-.container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
+body {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   background-color: var(--background);
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(images/scale-steve-johnson-8fnJThWFl6I-unsplash.webp);
-  background-position: center;
+  background: linear-gradient(0deg, rgba(12, 12, 14, 0.5), rgba(12, 12, 14, 0.5)), url(images/steve-unsplash.webp);
+  background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   background-attachment: fixed;
-  background-size: 100% 100%;
   color: var(--white);
 }
 
-.panel {
+/* Container */
+
+.container {
   position: relative;
   width: 45vw;
-  height: 35vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  min-height: 35vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content auto;
+  grid-template-areas: "nav" "panel";
 }
 
-.panel::before {
+.container::before {
   content: "";
   position: absolute;
-  inset: center;
-  width: calc(100% + 8vw);
-  height: calc(100% + 5vh);
+  top: calc(var(--container-y) / -2);
+  left: calc(var(--container-x) / -2);
+  width: calc(100% + var(--container-x));
+  height: calc(100% + var(--container-y));
   border-radius: 1.06vw;
-  backdrop-filter: blur(0.3vw);
-  -webkit-backdrop-filter: blur(0.3vw);
+  backdrop-filter: blur(0.25vw);
+  -webkit-backdrop-filter: blur(0.25vw);
   border: 0.1vw solid rgba(242, 243, 244, 0.3);
   box-shadow: 1px -1px 14px 3px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 1px -1px 14px 3px rgba(0, 0, 0, 0.75);
 }
 
-@media (max-width: 1400px) {
-  .panel {
-    width: 60vw;
-  }
-}
-
-@media (max-width: 760px) {
-  .panel {
-    width: 75vw;
-  }
-}
-
-.panel .timer-panel,
-.panel .stopwatch-panel {
+.container > * {
   position: relative;
 }
 
-/* Nav Panel */
+/* Icons */
 
-.page-nav {
+i {
+  font-size: 1.5rem;
+}
+
+i:hover,
+i:focus {
+  transform: scale(1.5);
+}
+
+i:active {
+  transform: scale(1.2);
+}
+
+i.hidden {
   position: absolute;
-  top: 0;
-  width: 100%;
-  padding: 1vh 0;
+  visibility: hidden;
+}
+
+/* Navigation */
+
+nav {
+  grid-area: nav;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1vh 0;
 }
 
-.page-nav button {
-  padding: 0 4ch;
-  font-size: 1.4rem;
+nav button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 5.5ch;
   border: none;
+  border-bottom: 0.1vw solid var(--gray);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  transition: color 0.2s ease-in-out, border 0.4s ease-in-out;
   background-color: transparent;
   color: var(--gray);
-  border-bottom: 0.1vw solid var(--gray);
-  transition: color 0.2s ease-in-out, border 0.4s ease-in-out;
   cursor: pointer;
 }
 
-.page-nav button:hover,
-.page-nav button:focus {
+nav button:hover,
+nav button:focus {
   outline: none;
   color: rgba(242, 243, 244);
 }
 
-.page-nav button.active {
-  color: var(--primary);
+nav button.active {
+  outline: none;
   border-color: var(--primary);
+  color: var(--primary);
   cursor: auto;
 }
 
-@media (max-width: 900px) {
-  .page-nav button:not(.active) {
-    display: none;
+@media (max-width: 1200px) {
+  nav button {
+    position: absolute;
+  }
+
+  nav button:not(.active) {
+    visibility: hidden;
   }
 }
 
-/* Panels */
-.stopwatch-panel,
-.timer-panel {
+/* Shared */
+
+.container section {
+  grid-area: panel;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.stopwatch-panel:not(.active),
-.timer-panel:not(.active) {
+.container section:not(.active) {
   display: none;
 }
 
-.edit-panel {
-  position: absolute;
-  right: -55%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Edit Panel&Control */
-
-.edit-control,
-.edit-panel {
-  user-select: none;
-}
-
-.edit-control i,
-.edit-panel i {
-  margin: 0 0.3ch;
-  font-size: 1.5rem;
-}
-
-.edit-panel i:hover,
-.edit-panel i:focus,
-.edit-control i:hover,
-.edit-control i:focus {
-  outline: none;
-  transform: scale(1.5);
-  cursor: pointer;
-}
-
-.edit-panel i:active,
-.edit-control i:active {
-  transform: scale(1.2);
-}
-
-.edit-control i.hidden,
-.edit-panel.hidden,
-.edit-control.edit {
-  display: none;
-}
-
-/* Timer Panel */
-
-.timer-panel .clock-panel h1 p {
-  margin: 0 0.2ch;
-  padding: 0;
-}
-
-.timer-panel .clock-panel h1 p.edit {
-  margin: 0 0.4ch 0 0;
-}
-
-.timer-panel .clock-panel h1 p:last-of-type:not(.edit) {
-  display: none;
-}
-
-.timer-panel .clock-panel h1 span {
-  margin: 0;
-  padding: 0;
-}
-
-.timer-panel .clock-panel h1 {
+section .display {
   position: relative;
   display: flex;
   flex-direction: row;
-  font-size: 2.5rem;
-  margin: 1.2ch 0 0.8ch 0;
-  color: var(--white);
-  cursor: default;
-}
-.timer-panel .clock-panel h1 input {
-  position: absolute;
-  top: 0;
-  left: -5%;
-  width: 110%;
-  height: 100%;
-  visibility: hidden;
-  font-size: 2.5rem;
-  text-align: right;
-  border: none;
-  outline: none;
-  transition: border-bottom 0.1s ease-in-out;
-  background: transparent;
-  color: var(--white);
-  cursor: pointer;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 0 0 1rem 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: clockicons, sans-serif;
+  font-weight: 400;
 }
 
-.timer-panel .clock-panel h1 input.edit {
-  visibility: visible;
-  border-bottom: 1px solid var(--white);
-}
-
-.timer-panel .clock-panel h1 input:focus.edit {
-  border-bottom-color: var(--primary);
-}
-
-.shake {
-  animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
-  }
-
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
-  }
-}
-
-/* Stopwatch Panel */
-
-.stopwatch-panel h1 {
-  display: inline-block;
-  margin: 1.2ch 0 0.8ch 0;
-  font-size: 2.5rem;
-}
-
-.stopwatch-panel h1 span {
-  display: inline-block;
-  padding-left: 0.5ch;
+section .display p {
   margin: 0;
-  font-size: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+section div {
+  user-select: none;
+}
+
+section div i {
+  width: 2rem;
+  margin: 0.25rem;
+  text-align: center;
+}
+
+/* Stopwatch */
+
+.stopwatch .display p:last-of-type {
+  padding: 0 0.25rem 0 0.35rem;
+  font-size: clamp(1.65rem, 3.55vw, 2.55rem);
+}
+
+.stopwatch .display span[data-pos="hour"]:empty + p,
+.stopwatch .display span[data-pos="minute"]:empty + p {
+  display: none;
+}
+
+.stopwatch .display span[data-pos="millisecond"] {
+  font-size: clamp(1.65rem, 3.55vw, 2.55rem);
+}
+
+/* Timer */
+
+.timer .display p:last-of-type {
+  display: none;
+}
+
+.timer .control:not(.finished) i.finish {
+  display: none;
+}
+
+.timer .control.finished i:not(.finish) {
+  display: none;
 }
