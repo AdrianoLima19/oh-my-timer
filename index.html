@@ -16,7 +16,7 @@
 
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="./css/all.min.css" />
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
   </head>
   <body>
     <main class="container">
@@ -34,18 +34,25 @@
           <p>:</p>
           <span data-pos="second">00</span>
           <p>:</p>
+          <input type="text" data-input>
+          <div class="edit">
+            <i tabindex="0" data-role="close" class="fas fa-times"></i>
+            <i tabindex="0" data-role="save" class="fas fa-save"></i>
+          </div>
         </h1>
-        <div class="control">
+        <div class="control active">
           <i tabindex="0" data-role="check" class="fas fa-check finish"></i>
           <i tabindex="0" data-role="replay" class="fas fa-redo finish"></i>
           <i tabindex="0" data-role="edit" class="fas fa-clock"></i>
           <i tabindex="0" data-role="play" class="fas fa-play"></i>
           <i tabindex="0" data-role="pause" class="fas fa-pause hidden"></i>
           <i tabindex="0" data-role="redo" class="fas fa-redo-alt"></i>
-          <i tabindex="0" data-role="bellOn" class="fas fa-bell hidden"></i>
-          <i tabindex="0" data-role="bellOff" class="fas fa-bell-slash"></i>
+          <i tabindex="0" data-role="bellOn" class="fas fa-bell hidden md"></i>
+          <i tabindex="0" data-role="bellOff" class="fas fa-bell-slash md"></i>
           <i tabindex="0" data-role="volumeOn" class="fas fa-volume-up"></i>
           <i tabindex="0" data-role="volumeOff" class="fas fa-volume-off hidden"></i>
+          <i tabindex="0" data-role="close" class="fas fa-times sm"></i>
+          <i tabindex="0" data-role="save" class="fas fa-save sm"></i>
         </div>
       </section>
       <!-- Stopwatch -->

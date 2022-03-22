@@ -13,12 +13,16 @@ var stopwatchStamp, stopwatchFreezeTime, runStopwatchClock;
 const stopwatchRoles = {
   play() {
     toggleStopwatchState("play");
+
     stopwatchStamp = !stopwatchStamp ? Date.now() : stopwatchStamp + Date.now() - stopwatchFreezeTime;
+
     runStopwatchClock = setInterval(runStopwatchInterval, 75);
   },
   pause() {
     toggleStopwatchState("pause");
+
     stopwatchFreezeTime = Date.now();
+
     clearInterval(runStopwatchClock);
   },
   redo() {
@@ -83,7 +87,7 @@ function parseStopwatchStampToArray(millisecond) {
 const timerPanel = document.querySelector(".container .timer");
 
 // var timerStamp = 2000, //timer -> 2s
-  var timerStamp = 300000, //timer -> 5m
+var timerStamp = 300000, //timer -> 5m
   runTimer,
   freezeTimer,
   runTimerClock,
@@ -101,11 +105,13 @@ const timerElements = {
   volumeOff: timerPanel.querySelector(".control .fa-volume-off"),
   bellOn: timerPanel.querySelector(".control .fa-bell"),
   bellOff: timerPanel.querySelector(".control .fa-bell-slash"),
+  edit: timerPanel.querySelector(".display .edit"),
+  input: timerPanel.querySelector(".display input"),
 };
 
 const timerRoles = {
   play() {
-    if (typeof runTimer !== "undefined" && runTimer <= 1000) return;
+    if (parseTimerDisplayToString() === "000000") return;
 
     toggleTimerState("play");
 
@@ -138,6 +144,7 @@ const timerRoles = {
   },
   check() {
     audio.pause();
+
     toggleTimerState("pause");
 
     if (typeof notifyTimer !== "undefined") notifyTimer.close();
@@ -146,18 +153,24 @@ const timerRoles = {
   },
   replay() {
     audio.pause();
+
     this.redo();
     this.play();
+
     timerElements.control.classList.toggle("finished");
   },
   volumeOn() {
     localStorage.setItem("playAudio", false);
+
     playAudio = false;
+
     toggleAudioState("on");
   },
   volumeOff() {
     localStorage.setItem("playAudio", true);
+
     playAudio = true;
+
     toggleAudioState("off");
   },
   bellOff() {
@@ -167,7 +180,9 @@ const timerRoles = {
 
     if (Notification.permission === "granted") {
       toggleNotificationSate("off");
+
       localStorage.setItem("timerNotification", true);
+
       timerNotification = true;
     }
 
@@ -177,8 +192,43 @@ const timerRoles = {
   },
   bellOn() {
     toggleNotificationSate("on");
+
     localStorage.setItem("timerNotification", false);
+
     timerNotification = false;
+  },
+  edit() {
+    toggleTimerState("pause");
+
+    if (typeof runTimerClock !== "undefined") {
+      clearInterval(runTimerClock);
+    }
+
+    toggleTimerEdit();
+  },
+  close() {
+    let value;
+
+    if (typeof runTimer !== "undefined") value = runTimer - freezeTimer;
+
+    parseTimerStringToDisplay(parseTimerStampToString(value ?? timerStamp ?? 0), true);
+
+    toggleTimerEdit();
+  },
+  save() {
+    let timer = parseTimerDisplayToString().match(/.{1,2}/g);
+
+    toggleTimerState("pause");
+
+    if (typeof runTimerClock !== "undefined") {
+      clearInterval(runTimerClock);
+
+      runTimer = freezeTimer = runTimerClock = undefined;
+    }
+
+    timerStamp = timer[0] * 3600000 + timer[1] * 60000 + timer[2] * 1000;
+
+    toggleTimerEdit();
   },
 };
 
@@ -190,6 +240,22 @@ timerPanel.addEventListener("click", (event) => {
   event.target.blur();
 
   if (timerRoles[role]) timerRoles[role]();
+});
+
+timerElements.input.addEventListener("focus", () => {
+  parseTimerStringToDisplay(parseTimerStampToString(0), true);
+});
+
+timerElements.input.onkeydown = (event) => {
+  if (event.key == "Enter") timerRoles.save();
+};
+
+timerElements.input.addEventListener("textInput", (event) => {
+  event.preventDefault();
+
+  if (isNaN(event.data)) return;
+
+  parseTimerStringToDisplay(parseTimerDisplayToString().substring(1) + event.data);
 });
 
 function toggleTimerState(state) {
@@ -249,10 +315,25 @@ function toggleNotificationSate(state) {
 
 function pushTimerNotification() {
   if (!timerNotification) return;
+
   let title = "Oh My Timer";
   let body = "Timer Finalizado!";
   let icon = "./favicon.png";
-  notifyTimer = new Notification(title, { body, icon });
+
+  notifyTimer = new Notification(title, { body, icon }); // var|let não atribuído para variável vazar para escopo global
+}
+
+function toggleTimerEdit() {
+  timerElements.edit.classList.toggle("active");
+  timerElements.input.classList.toggle("active");
+  timerElements.control.classList.toggle("active");
+}
+
+function parseTimerDisplayToString() {
+  return timerElements.display.textContent
+    .replace(/\r?\n|\r/g, "")
+    .replace(/:/g, "")
+    .replaceAll(" ", "");
 }
 
 // Navigation
@@ -304,10 +385,12 @@ if (
     browserAgent.substr(0, 4)
   )
 ) {
-  // fix timerElements["input"].type = "number";
+  timerElements.input.type = "number";
 }
 
 // Document Ready
 
+// Não é necessário colocar if statements em window.onload pois arquivo é chamado
+// com atributo defer que so executa script quando html está pronto
 if (playAudio === false) timerRoles.volumeOn(); // toggle state to off
 if (timerNotification === true) timerRoles.bellOff(); // toggle state to on

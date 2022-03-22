@@ -78,10 +78,26 @@ body {
   position: relative;
 }
 
+@media (max-width: 1200px) {
+  .container {
+    width: 50vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    width: 85vw;
+  }
+}
+
 /* Icons */
 
 i {
+  padding: 0.1rem 0;
   font-size: 1.5rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 250ms ease-in-out;
 }
 
 i:hover,
@@ -96,6 +112,12 @@ i:active {
 i.hidden {
   position: absolute;
   visibility: hidden;
+}
+
+@media (max-width: 720px) {
+  i {
+    font-size: 1.25rem;
+  }
 }
 
 /* Navigation */
@@ -214,4 +236,79 @@ section div i {
 
 .timer .control.finished i:not(.finish) {
   display: none;
+}
+
+.timer .control i.sm {
+  display: none;
+}
+
+.display .edit {
+  position: absolute;
+  right: calc(var(--container-x) * -1 / 2);
+  bottom: calc(var(--container-y) / -2);
+  height: calc(100% + var(--container-y));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.display .edit:not(.active),
+.timer .control:not(.active) {
+  display: none;
+}
+
+.display input {
+  position: absolute;
+  top: 0;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  font-size: clamp(2rem, 4vw, 3rem);
+  text-align: right;
+  border: none;
+  outline: none;
+  transition: border-bottom 0.1s ease-in-out;
+  background: transparent;
+  color: var(--white);
+  visibility: hidden;
+}
+
+.display input.active {
+  visibility: visible;
+  border-bottom: 1px solid var(--white);
+}
+
+.display input:focus.active {
+  visibility: visible;
+  border-bottom: 1px solid var(--primary);
+}
+
+@media (max-width: 1200px) {
+  .timer .edit {
+    display: none;
+  }
+
+  .timer .control,
+  .timer .control:not(.active) {
+    display: flex;
+  }
+
+  .timer .control:not(.active) i:not(.sm) {
+    display: none;
+  }
+
+  .timer .control:not(.active) i.sm {
+    display: inline-block;
+    margin: 0 0.75rem;
+  }
+}
+
+@media (max-width: 720px) {
+  /* .timer .control .md {
+    display: none;
+  } */
+  i {
+    font-size: 1.4rem;
+  }
 }
