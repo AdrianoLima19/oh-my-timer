@@ -39,7 +39,8 @@ body {
   align-items: center;
   justify-content: center;
   background-color: var(--background);
-  background: linear-gradient(0deg, rgba(12, 12, 14, 0.5), rgba(12, 12, 14, 0.5)), url(images/steve-unsplash.webp);
+  background: red;
+  /* background: linear-gradient(0deg, rgba(12, 12, 14, 0.5), rgba(12, 12, 14, 0.5)), url(images/steve-unsplash.webp); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
