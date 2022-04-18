@@ -86,8 +86,8 @@ function parseStopwatchStampToArray(millisecond) {
 
 const timerPanel = document.querySelector(".container .timer");
 
-// var timerStamp = 2000, //timer -> 2s
-var timerStamp = 300000, //timer -> 5m
+var timerStamp = 2000, //timer -> 2s
+  // var timerStamp = 300000, //timer -> 5m
   runTimer,
   freezeTimer,
   runTimerClock,
@@ -148,6 +148,8 @@ const timerRoles = {
     toggleTimerState("pause");
 
     if (typeof notifyTimer !== "undefined") notifyTimer.close();
+
+    runTimer = freezeTimer = runTimerClock = undefined;
 
     timerElements.control.classList.toggle("finished");
   },
@@ -318,7 +320,7 @@ function pushTimerNotification() {
 
   let title = "Oh My Timer";
   let body = "Timer Finalizado!";
-  let icon = "./favicon.png";
+  let icon = "./images/elizabeth.png";
 
   notifyTimer = new Notification(title, { body, icon }); // var|let não atribuído para variável vazar para escopo global
 }

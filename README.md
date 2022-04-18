@@ -1,19 +1,10 @@
 # oh-my-timer
 
 ## Features
-	
+
 Temporizador
 
 Cronômetro
-
-
-## Todo
-
-- [x] Otimizar renderização do cronômetro.
-- [x] Melhorar leitura do código javascript
-- [x] Reimplementar funcionalidades com object literals
-- [x] remover flickering do cronômetro.
-
 
 ---
 
