@@ -26,18 +26,130 @@
           <input type="text" data-input />
         </h1>
         <ul class="control" active>
-          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="edit" class="ph-clock-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="play" class="ph-play-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="pause" class="ph-pause-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="reset" class="ph-arrows-clockwise-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="bellOn" class="ph-bell-ringing-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="bellOff" class="ph-bell-slash-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="speakerOn" class="ph-speaker-simple-high-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="speakerOff" class="ph-speaker-simple-slash-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="close" edit class="ph-x-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="save" edit class="ph-check-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="check" finish class="ph-check-fill"></i></li>
-          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="restart" finish class="ph-arrows-counter-clockwise-fill"></i></li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="editar temporizador"
+              aria-hidden="false"
+              role="button"
+              data-type="edit"
+              class="ph-clock-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="iniciar temporizador"
+              aria-hidden="false"
+              role="button"
+              data-type="play"
+              class="ph-play-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="pausar temporizador"
+              aria-hidden="true"
+              role="button"
+              data-type="pause"
+              class="ph-pause-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="redefinir temporizador"
+              aria-hidden="false"
+              role="button"
+              data-type="reset"
+              class="ph-arrows-clockwise-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="ativar notificação"
+              aria-hidden="true"
+              role="button"
+              data-type="bellOn"
+              class="ph-bell-ringing-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="desativar notificação"
+              aria-hidden="false"
+              role="button"
+              data-type="bellOff"
+              class="ph-bell-slash-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="ativar som"
+              aria-hidden="true"
+              role="button"
+              data-type="speakerOn"
+              class="ph-speaker-simple-high-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="desativar som"
+              aria-hidden="false"
+              role="button"
+              data-type="speakerOff"
+              class="ph-speaker-simple-slash-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="fechar edição"
+              aria-hidden="true"
+              role="button"
+              data-type="close"
+              edit
+              class="ph-x-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="salvar edição"
+              aria-hidden="true"
+              role="button"
+              data-type="save"
+              edit
+              class="ph-check-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="concluir temporizador"
+              aria-hidden="true"
+              role="button"
+              data-type="check"
+              finish
+              class="ph-check-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="reiniciar temporizador"
+              aria-hidden="true"
+              role="button"
+              data-type="restart"
+              finish
+              class="ph-arrows-counter-clockwise-fill"
+            ></i>
+          </li>
         </ul>
       </section>
       <section id="stopwatch" class="panel stopwatch">
@@ -51,9 +163,36 @@
           <span data-position="millisecond">00</span>
         </h1>
         <ul class="control">
-          <li><i tabindex="0" aria-label="iniciar" aria-hidden="false" role="button" data-type="play" class="ph-play-fill"></i></li>
-          <li><i tabindex="0" aria-label="pausar" aria-hidden="true" role="button" data-type="pause" class="ph-pause-fill"></i></li>
-          <li><i tabindex="0" aria-label="reiniciar" aria-hidden="false" role="button" data-type="replay" class="ph-arrows-clockwise-fill"></i></li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="iniciar cronômetro"
+              aria-hidden="false"
+              role="button"
+              data-type="play"
+              class="ph-play-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="pausar cronômetro"
+              aria-hidden="true"
+              role="button"
+              data-type="pause"
+              class="ph-pause-fill"
+            ></i>
+          </li>
+          <li>
+            <i
+              tabindex="0"
+              aria-label="redefinir cronômetro"
+              aria-hidden="false"
+              role="button"
+              data-type="replay"
+              class="ph-arrows-clockwise-fill"
+            ></i>
+          </li>
         </ul>
       </section>
     </main>
