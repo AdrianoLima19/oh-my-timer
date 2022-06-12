@@ -8,81 +8,56 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://adriano-lima.dev.br/projetos/oh-my-timer/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Oh My Timer" />
-    <meta property="og:description" content="Temporizador e Cronômetro web." />
-    <meta property="og:image" content="https://adriano-lima.dev.br/projetos/oh-my-timer/images/project.png" />
-
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="adriano-lima.dev.br" />
-    <meta property="twitter:url" content="https://adriano-lima.dev.br/projetos/oh-my-timer/" />
-    <meta name="twitter:title" content="Oh My Timer" />
-    <meta name="twitter:description" content="Temporizador e Cronômetro web." />
-    <meta name="twitter:image" content="https://adriano-lima.dev.br/projetos/oh-my-timer/images/project.png" />
-
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="./css/all.min.css" />
-    <link rel="shortcut icon" href="images/katsura.png" type="image/x-icon" />
+    <link rel="stylesheet" href="./assets/css/styles.min.css" />
   </head>
   <body>
     <main class="container">
-      <!-- Navigation -->
       <nav>
-        <button data-role="timer" class="active">Temporizador</button>
-        <button data-role="stopwatch">Cronômetro</button>
+        <button data-type="timer" active type="button" aria-controls="timer" aria-expanded="true">Temporizador</button>
+        <button data-type="stopwatch" type="button" aria-controls="stopwatch" aria-expanded="false">Cronômetro</button>
       </nav>
-      <!-- Timer -->
-      <section class="timer active">
-        <h1 class="display" data-display>
-          <span data-pos="hour">00</span>
+      <section id="timer" active class="panel timer">
+        <h1 class="display">
+          <span>00</span>
           <p>:</p>
-          <span data-pos="minute">05</span>
+          <span>05</span>
           <p>:</p>
-          <span data-pos="second">00</span>
-          <p>:</p>
+          <span>00</span>
           <input type="text" data-input />
-          <div class="edit">
-            <i tabindex="0" data-role="close" class="fas fa-times"></i>
-            <i tabindex="0" data-role="save" class="fas fa-save"></i>
-          </div>
         </h1>
-        <div class="control active">
-          <i tabindex="0" data-role="check" class="fas fa-check finish"></i>
-          <i tabindex="0" data-role="replay" class="fas fa-redo finish"></i>
-          <i tabindex="0" data-role="edit" class="fas fa-clock"></i>
-          <i tabindex="0" data-role="play" class="fas fa-play"></i>
-          <i tabindex="0" data-role="pause" class="fas fa-pause hidden"></i>
-          <i tabindex="0" data-role="redo" class="fas fa-redo-alt"></i>
-          <i tabindex="0" data-role="bellOn" class="fas fa-bell hidden md"></i>
-          <i tabindex="0" data-role="bellOff" class="fas fa-bell-slash md"></i>
-          <i tabindex="0" data-role="volumeOn" class="fas fa-volume-up"></i>
-          <i tabindex="0" data-role="volumeOff" class="fas fa-volume-off hidden"></i>
-          <i tabindex="0" data-role="close" class="fas fa-times sm"></i>
-          <i tabindex="0" data-role="save" class="fas fa-save sm"></i>
-        </div>
+        <ul class="control" active>
+          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="edit" class="ph-clock-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="play" class="ph-play-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="pause" class="ph-pause-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="reset" class="ph-arrows-clockwise-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="bellOn" class="ph-bell-ringing-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="bellOff" class="ph-bell-slash-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="speakerOn" class="ph-speaker-simple-high-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="false" role="button" data-type="speakerOff" class="ph-speaker-simple-slash-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="close" edit class="ph-x-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="save" edit class="ph-check-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="check" finish class="ph-check-fill"></i></li>
+          <li><i tabindex="0" aria-label="" aria-hidden="true" role="button" data-type="restart" finish class="ph-arrows-counter-clockwise-fill"></i></li>
+        </ul>
       </section>
-      <!-- Stopwatch -->
-      <section class="stopwatch">
-        <h1 class="display" data-display>
-          <span data-pos="hour"></span>
+      <section id="stopwatch" class="panel stopwatch">
+        <h1 class="display">
+          <span data-position="hour"></span>
           <p>:</p>
-          <span data-pos="minute"></span>
+          <span data-position="minute"></span>
           <p>:</p>
-          <span data-pos="second">00</span>
+          <span data-position="second">00</span>
           <p>.</p>
-          <span data-pos="millisecond">00</span>
+          <span data-position="millisecond">00</span>
         </h1>
-        <div class="control">
-          <i tabindex="0" data-role="play" class="fas fa-play"></i>
-          <i tabindex="0" data-role="pause" class="fas fa-pause hidden"></i>
-          <i tabindex="0" data-role="redo" class="fas fa-redo-alt"></i>
-        </div>
+        <ul class="control">
+          <li><i tabindex="0" aria-label="iniciar" aria-hidden="false" role="button" data-type="play" class="ph-play-fill"></i></li>
+          <li><i tabindex="0" aria-label="pausar" aria-hidden="true" role="button" data-type="pause" class="ph-pause-fill"></i></li>
+          <li><i tabindex="0" aria-label="reiniciar" aria-hidden="false" role="button" data-type="replay" class="ph-arrows-clockwise-fill"></i></li>
+        </ul>
       </section>
     </main>
-    <script src="script.js" async defer></script>
+
+    <script src="./assets/js/main.min.js" async defer></script>
   </body>
 </html>
