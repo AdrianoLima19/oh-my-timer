@@ -13,14 +13,14 @@ module.exports = {
     filename: "js/[name].min.js",
   },
 
-  devtool: "inline-source-map",
+  devtool: "source-map",
 
   module: {
     rules: [
       {
         test: /\.css$/i,
         exclude: /node_modules/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
       },
       {
         test: /\.webp|jpg|png$/,
@@ -37,7 +37,7 @@ module.exports = {
         generator: {
           filename: "./fonts/[name][ext]",
         },
-      }
+      },
     ],
   },
   plugins: [
